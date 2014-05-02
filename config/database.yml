@@ -1,0 +1,25 @@
+# PostgreSQL. Versions 8.2 and up are supported.
+#
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: all_star_game_development
+  pool: 5
+  username: <%=`whoami`%>
+  password:
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: all_star_game_test
+  pool: 5
+  username: <%=`whoami`%>
+  password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: all_star_game_production
+  pool: 5
+  username: <%=`whoami`%>
+  password:

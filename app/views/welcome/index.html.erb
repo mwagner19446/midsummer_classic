@@ -1,0 +1,106 @@
+<h1>Midsummer Classic:  Participant Visualizer</h1>
+<!-- http://bost.ocks.org/mike/bar/ -->
+<style>
+html,body,#wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
+ 
+.chart {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+}
+ 
+.axis path,.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+ 
+.starter {
+  fill: #33b5e5;
+}
+ 
+.reserve {
+  fill: #CC0000;
+}
+ 
+</style>
+
+<form id="search">
+  <input type="search"/>
+  <button id="search">Seach</button>
+</form>
+
+<script>
+var tasks = [
+{"startDate":new Date("1990"),"endDate":new Date("1991"),"taskName":"Lenny Dykstra","status":"STARTER"},
+{"startDate":new Date("1994"),"endDate":new Date("1995"),"taskName":"Lenny Dykstra","status":"RESERVE"},
+{"startDate":new Date("1995"),"endDate":new Date("1996"),"taskName":"Lenny Dykstra","status":"STARTER"},
+{"startDate":new Date("1991"),"endDate":new Date("1992"),"taskName":"John Kruk","status":"RESERVE"},
+{"startDate":new Date("1992"),"endDate":new Date("1993"),"taskName":"John Kruk","status":"RESERVE"},
+{"startDate":new Date("1993"),"endDate":new Date("1994"),"taskName":"John Kruk","status":"STARTER"},
+{"startDate":new Date("1992"),"endDate":new Date("1993"),"taskName":"Darren Daulton","status":"RESERVE"},
+{"startDate":new Date("1993"),"endDate":new Date("1994"),"taskName":"Darren Daulton","status":"STARTER"},
+{"startDate":new Date("1995"),"endDate":new Date("1996"),"taskName":"Darren Daulton","status":"RESERVE"},
+];
+
+var taskStatus = {
+    "STARTER" : "starter",
+    "RESERVE" : "reserve",
+};
+
+var taskNames = [ "Lenny Dykstra", "John Kruk", "Darren Daulton"];
+
+tasks.sort(function(a, b) {
+    return a.endDate - b.endDate;
+});
+var maxDate = tasks[tasks.length - 1].endDate;
+tasks.sort(function(a, b) {
+    return a.startDate - b.startDate;
+});
+var minDate = tasks[0].startDate;
+
+var format = "%Y";
+
+var gantt = d3.gantt()
+  .taskTypes(taskNames)
+  .taskStatus(taskStatus)
+  .tickFormat(format);
+
+gantt(tasks);
+
+
+function addPlayer(keyword){
+  $.getJSON("/player/add?keyword="+keyword, function(response)
+    {  
+      taskNames.push(response[0].taskName)
+      for (var i=0; i<response.length; i++)
+        {
+          x = response[i]
+          x.endDate = new Date(response[i].endDate.toString())
+          x.startDate = new Date(response[i].startDate.toString())
+          tasks.push(x)
+        }
+      $(".chart").remove()
+      gantt(tasks);
+    })
+}
+
+$("button#search").click(function(e){
+  e.preventDefault()
+  var keyword = e.target.parentElement.children[0].value
+  addPlayer(keyword)
+})
+
+$("input").typeahead(null, 
+{
+  name: 'players',
+  remote: '../player/all.json',
+  displayKey: 'name'
+}
+);
+
+
+</script>

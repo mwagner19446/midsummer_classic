@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code: MyString
+  league: MyString
+  team: MyString
+  year: 1
+  starter: false
+  starter_position: 1
+
+two:
+  code: MyString
+  league: MyString
+  team: MyString
+  year: 1
+  starter: false
+  starter_position: 1
